@@ -4,7 +4,7 @@ import sys
 from PyQt6 import uic
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QApplication, QTableWidgetItem, QHeaderView, QVBoxLayout, QHBoxLayout, QMainWindow, \
-    QMessageBox, QStatusBar
+    QMessageBox
 
 
 class MyWidget(QWidget):
@@ -82,9 +82,6 @@ class NewWidget(QMainWindow):
         self.verd_btn.clicked.connect(self.act)
         if self.parent().Flag == 'add':
             self.id_line.setEnabled(False)
-            self.add()
-        elif self.parent().Flag == 'change':
-            self.change()
 
     def act(self):
         id = self.id_line.text()
@@ -136,17 +133,13 @@ class NewWidget(QMainWindow):
 
         elif self.parent().Flag == 'change':
             try:
-                cursor.execute(f"""UPDATE coffee
-                                SET name = {name}
-                                roasting  = {roasting}
-                                grinding  = {grinding}
-                                taste  = {info}
-                                price  = {price}
-                                volume  = {volume}
-                                WHERE id = {id}""").fetchall()
-
+                cursor.execute("""
+                            UPDATE coffee
+                            SET name = ?, roasting = ?, grinding = ?, taste = ?, price = ?, volume = ?
+                            WHERE id = ?
+                        """, (name, roasting, grinding, info, price, volume, id))
                 self.con.commit()
-                QMessageBox.information(self, 'Успех', 'Кофе добавлен!')
+                QMessageBox.information(self, 'Успех', 'Кофе изменен!')
                 self.statuslabel.setText('')
                 self.parent().load_data()
                 self.close()
