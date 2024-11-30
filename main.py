@@ -1,13 +1,14 @@
 import sqlite3
 import sys
 
-from PyQt6 import uic
+from main_ui import Ui_Form
+from addEditCoffeeForm import Ui_MainWindow
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget, QApplication, QTableWidgetItem, QHeaderView, QVBoxLayout, QHBoxLayout, QMainWindow, \
     QMessageBox
 
 
-class MyWidget(QWidget):
+class MyWidget(QWidget, Ui_Form):
     def __init__(self):
         super().__init__()
         self.change_btn = None
@@ -15,8 +16,7 @@ class MyWidget(QWidget):
         self.con = None
         self.Flag = ''
         self.tableWidget = None
-        uic.loadUi('main.ui', self)
-
+        self.setupUi(self)
         self.tableWidget.setColumnCount(7)
         self.tableWidget.setHorizontalHeaderLabels(
             ['ID', 'Название сорта', 'обжарка', 'помол', 'вкусовые характеристики', 'цена', 'объем упаковки']
@@ -65,7 +65,7 @@ class MyWidget(QWidget):
         self.new_form.show()
 
 
-class NewWidget(QMainWindow):
+class NewWidget(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.statuslabel = None
@@ -78,10 +78,11 @@ class NewWidget(QMainWindow):
         self.name_line = None
         self.id_line = None
         self.con = None
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.verd_btn.clicked.connect(self.act)
         if self.parent().Flag == 'add':
             self.id_line.setEnabled(False)
+
 
     def act(self):
         id = self.id_line.text()
